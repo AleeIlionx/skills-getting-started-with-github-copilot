@@ -41,7 +41,6 @@ activities = {
     }
 }
 
-
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
@@ -62,6 +61,10 @@ def signup_for_activity(activity_name: str, email: str):
     # Get the specific activity
     activity = activities[activity_name]
 
+    # Validate student is not already signed up
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
